@@ -16,7 +16,6 @@ Attribute VB_Exposed = False
 '                   dinamicamente exobindo a evolução de um processo envocado simultaneamente.
 '-----------------------------------------------------------------------------------------
 Option Explicit
-
 '=========================================================================================
 ' DECLARAÇÃO DE VARIÁVEIS PERSONALIZADAS DA CLASSE.
 Enum BarType
@@ -36,7 +35,6 @@ End Enum
   Private Const aNameBar                As String = "ctlCPBar"
   Private Const aMaxWidthBar            As Integer = 300
   Private Const aClass                  As String = "ApiFunction"
-  Private Const aOpEx                   As String = "Option Explicit"
 '=========================================================================================
 
 '=========================================================================================
@@ -127,7 +125,6 @@ End Function
 Private Sub Class_Initialize()
   'Define alguns atributos padrões.
   aTBar = Progress: aTCount = Percentage
-  aApiClass = IsClassPresent(aClass)
 End Sub
 Private Sub Class_Terminate()
   'Deleta o formulário criado.
@@ -146,57 +143,21 @@ End Sub
 Private Sub CreateNewForm()
   'Atribui o novo VbComponent ao atributo aForm.
   Set aControl = ThisWorkbook.VBProject.VBComponents.Add(3)
-  'Chama rotina pra inserir código no formulário.
-  Call InsertScriptCode
+  'Configura a estrutura do novo Userform.
+  With aControl
+    .Properties("Tag") = aTagForm
+    .Properties("Caption") = ""
+    .Properties("Width") = 344
+    .Properties("Height") = VBA.IIf(aTBar = Progress, 75, 85)
+  End With
   'Adiciona o Userform criado a lista de Userforms.
   VBA.UserForms.Add aControl.Name
   'Atribui o novo Userform ao atributo aForm.
-  Set aForm = UserForms(UserForms.Count - 1)
-  'Chama rotina para configurar formulário.
-  Call FormConfig
-End Sub
-Private Sub InsertScriptCode()
-  'Cria variáveis locais.
-  Dim iLinha                            As Integer
-  Dim cMod                              As CodeModule
-  'Instancia o objeto CodeModule
-  Set cMod = aControl.CodeModule
-  'Inicia um bloco para inclusão de código.
-  With cMod
-    'Verifica o total de linhas e atribui a variável iLinha.
-    If Not .Find(aOpEx, 1, 1, 10, 20) Then .InsertLines .CountOfLines + 1, aOpEx
-    'Verifica se a Classe ApiFunction esta presente no projeto.
-    Select Case aApiClass
-      Case True
-        .InsertLines .CountOfLines + 1, "Private oApi As New ApiFunction"
-        .InsertLines .CountOfLines + 1, "Private Sub UserForm_Initialize()"
-        .InsertLines .CountOfLines + 1, "  Set oApi.FormStart = Me"
-        .InsertLines .CountOfLines + 1, "  oApi.RemoveTitleBar"
-        .InsertLines .CountOfLines + 1, "End Sub"
-      Case Else
-        .InsertLines .CountOfLines + 1, "Private aClose As VbQueryClose"
-        .InsertLines .CountOfLines + 1, "Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)"
-        .InsertLines .CountOfLines + 1, "  If aClose = vbFormControlMenu Then Cancel = True"
-        .InsertLines .CountOfLines + 1, "End Sub"
-      End Select
-  End With
-End Sub
-Private Sub FormConfig()
-  'Configura a estrutura do novo Userform.
-  With aForm
-    .Tag = aTagForm
-    .Caption = ""
-    .Width = 344
-    .Height = VBA.IIf(aTBar = Progress, 75, 85)
-  End With
+  Set aForm = VBA.UserForms(UserForms.Count - 1)
 End Sub
 Private Sub CreateNewFrame()
   'Atribui o novo Frame ao atributo aFrame.
   Set aFrame = aForm.Controls.Add("Forms.frame.1", aNameFrame, True)
-  'Chama rotina para configurar quadro.
-  Call FrameConfig
-End Sub
-Private Sub FrameConfig()
   'Configura a estrutra do novo Frame.
   With aFrame
     .Height = VBA.IIf(aTBar = Progress, 34, 43)
@@ -212,10 +173,6 @@ Private Sub CreateNewBar()
   Set aProgressBar = aFrame.Controls.Add(VBA.IIf( _
                      aTBar = Progress, "Forms.Label.1", "Forms.TextBox.1"), _
                      aNameBar, True)
-  'Chama rotina para configurar barra.
-  Call BarConfig
-End Sub
-Private Sub BarConfig()
   'Configura a estrutura do novo Control.
   With aProgressBar
     .Height = VBA.IIf(aTBar = Progress, 12, 18)
@@ -227,3 +184,4 @@ Private Sub BarConfig()
   End With
 End Sub
 '=========================================================================================
+
