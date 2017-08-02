@@ -50,4 +50,4 @@ Private Sub RecordsLoad()
   oProgressBar.CountType = Percentage
 End Sub
 ```
-->![Imagem com o Tipo de Contador, definido como Percentual](https://github.com/MikelSFraga/CustomProgressBar/blob/master/img/CountType_Percentage.png)<-
+-> ![Imagem com o Tipo de Contador, definido como Percentual](https://github.com/MikelSFraga/CustomProgressBar/blob/master/img/CountType_Percentage.png) <-
