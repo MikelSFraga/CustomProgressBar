@@ -8,7 +8,7 @@ A mesma é considerada personalizada, pois é possível realizar alterações na
 
 Veremos o detalhamento dos __Métodos__ e __Propriedades__ disponibilizados na ___cProgressBar___.
 
-### Métodos e Propriedades Classe
+#### Métodos e Propriedades Classe
 
 Através da criação destas ___Propriedades___ e ___Métodos___, tivemos o intuito de que a mesma funcionasse como um ___Framework de Projetos VBA___, onde a mesma possa ser chamada em qualquer momento do projeto, seja em um _Módulo_ ou um _Formulário de Pesquisa_. 
 Ressaltando que os nomes das ___Propriedades___ e ___Métodos___ são em Inglês, para seguir o padrão da língua estrangeira, utilizada como base para a __Programação VBA__.
@@ -33,4 +33,21 @@ Private Sub RecordsLoad()
 End Sub
 ```
 
-![alt text](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+##### CountType
+
+Essa propriedade nos permite definir o __Tipo do Contador__ que será utilizado na __Barra de Progresso__.
+
+__Exemplo 1:__ Valor definido como ___Percentage___ (_default_)
+```vb
+Option Explicit
+
+Private Sub RecordsLoad()
+  ' Declaração do objeto da classe.
+  Dim oProgressBar As New cProgressBar
+  ' Instancia o objeto para uso no ambiente.
+  Set oProgressBar = New cProgressBar
+  ' Define o valor máximo de registros de uma pesquisa.
+  oProgressBar.CountType = Percentage
+End Sub
+```
+![Imagem com o Tipo de Contador, definido como Percentual](https://github.com/MikelSFraga/CustomProgressBar/blob/master/img/CountType_Percentage.png)
