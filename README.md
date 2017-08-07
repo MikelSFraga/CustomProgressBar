@@ -110,6 +110,7 @@ End Sub
 <p align="center">
   <img src="https://github.com/MikelSFraga/CustomProgressBar/blob/master/img/BarType_DisplayText.png">
 </p>
+
 ***
 #### Métodos
 
