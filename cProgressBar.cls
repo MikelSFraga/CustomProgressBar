@@ -7,15 +7,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'-----------------------------------------------------------------------------------------
-' Classe          : cProgressBar Class
-' Data            :
-' Developer       : Mikel S Fraga
-' Contato/GitHub  : https://github.com/MikelSFraga/CustomProgressBar
-' Descrição       : Criação de um Progress Bar Personalizada, através da criação de um Userform
-'                   dinamicamente exobindo a evolução de um processo envocado simultaneamente.
-'-----------------------------------------------------------------------------------------
 Option Explicit
+
 '=========================================================================================
 ' DECLARAÇÃO DE VARIÁVEIS PERSONALIZADAS DA CLASSE.
 Enum BarType
@@ -35,6 +28,7 @@ End Enum
   Private Const aNameBar                As String = "ctlCPBar"
   Private Const aMaxWidthBar            As Integer = 300
   Private Const aClass                  As String = "ApiFunction"
+  Private Const aOpEx                   As String = "Option Explicit"
 '=========================================================================================
 
 '=========================================================================================
@@ -70,16 +64,13 @@ Public Property Let RecordMax(pRecordMax As Long): aRecordMax = pRecordMax: End 
 '=========================================================================================
 ' DECLARAÇÃO DOS MÉTODOS PUBLICOS DA CLASSE.
 Public Sub Initialize()
-  'This is to stop screen flashing while creating form
-  Application.VBE.MainWindow.Visible = False
   'Cria novo formulário.
   Call CreateNewForm
   'Cria caixa de grupo.
   Call CreateNewFrame
   'Cria barra com rótulo.
   Call CreateNewBar
-  'Abre o formulário que foi criado.,
-  Set aForm = UserForms(UserForms.Count - 1)
+  'Abre o formulário que foi criado.
   aForm.Show vbModeless
 End Sub
 Public Sub Update(ByVal pRecordNow As Long, Optional ByVal pRecordMax As Long, _
@@ -92,6 +83,7 @@ Public Sub Update(ByVal pRecordNow As Long, Optional ByVal pRecordMax As Long, _
   aFrame.Caption = VBA.IIf(aTCount = Percentage, _
           VBA.Format(aPercentil * 100, "0.00") & "% Concluído.", _
           pRecordNow & " de " & aRecordMax & " Concluído.")
+  'aFrame.Caption = aPercentil * 100
   'Define valor retorno para a barra do ProgressBa.
   If aTBar = Progress Then
     aProgressBar.Width = aMaxWidthBar * aPercentil
@@ -100,24 +92,11 @@ Public Sub Update(ByVal pRecordNow As Long, Optional ByVal pRecordMax As Long, _
   End If
   'Atualiza a barra em tempo de execução.
   VBA.DoEvents
-  'Oculta Userform se for o último registro.
-  If pRecordNow = aRecordMax Then aForm.Hide
 End Sub
 '=========================================================================================
 
 '=========================================================================================
 ' DECLARAÇÃO DOS MÉTODOS PRIVADOS DA CLASSE.
-Private Function IsClassPresent(ByVal pClass As String) As Boolean
-  'Cria um objeto local do tipo VBComponent.
-  Dim aVbComp                           As VBComponent
-  'Define um valor padrão para retorno da classe.
-  IsClassPresent = False
-  'Realiza um lanço entre todos os componentes do projeto.
-  For Each aVbComp In ThisWorkbook.VBProject.VBComponents
-    'Testa todos os componentes, verificando se o ApiFunction esta presente.
-    If aVbComp.Name = pClass Then IsClassPresent = True: Exit Function
-  Next aVbComp
-End Function
 '=========================================================================================
 
 '=========================================================================================
@@ -143,45 +122,60 @@ End Sub
 Private Sub CreateNewForm()
   'Atribui o novo VbComponent ao atributo aForm.
   Set aControl = ThisWorkbook.VBProject.VBComponents.Add(3)
-  'Configura a estrutura do novo Userform.
-  With aControl
-    .Properties("Tag") = aTagForm
-    .Properties("Caption") = ""
-    .Properties("Width") = 344
-    .Properties("Height") = VBA.IIf(aTBar = Progress, 75, 85)
-  End With
   'Adiciona o Userform criado a lista de Userforms.
   VBA.UserForms.Add aControl.Name
   'Atribui o novo Userform ao atributo aForm.
-  Set aForm = VBA.UserForms(UserForms.Count - 1)
+  Set aForm = UserForms(UserForms.Count - 1)
+  'Chama rotina para configurar formulário.
+  Call FormConfig
+End Sub
+Private Sub FormConfig()
+  'Configura a estrutura do novo Userform.
+  With aForm
+    .Tag = aTagForm
+    .Caption = ""
+    .Width = 344
+    .Height = VBA.IIf(aTBar = Progress, 85, 90)
+  End With
 End Sub
 Private Sub CreateNewFrame()
   'Atribui o novo Frame ao atributo aFrame.
   Set aFrame = aForm.Controls.Add("Forms.frame.1", aNameFrame, True)
+  'Chama rotina para configurar quadro.
+  Call FrameConfig
+End Sub
+Private Sub FrameConfig()
   'Configura a estrutra do novo Frame.
   With aFrame
-    .Height = VBA.IIf(aTBar = Progress, 34, 43)
+    .Height = VBA.IIf(aTBar = Progress, 42, 48)
     .Left = 6
     .Top = 6
     .Width = 320
     .Caption = ""
-    .SpecialEffect = fmSpecialEffectSunken
   End With
 End Sub
 Private Sub CreateNewBar()
+  'Verifica se o controle já esta atribuido ou existe no projeto.
+  For Each aControl In aForm.Controls
+    'Testa o elemento com o nome utilizado no projeto e o deleta.
+    If aControl.Name = aNameBar Then aFrame.Controls.Remove aControl
+  Next aControl
   'Atribui a no Control ao atributo aProgressBar.
   Set aProgressBar = aFrame.Controls.Add(VBA.IIf( _
                      aTBar = Progress, "Forms.Label.1", "Forms.TextBox.1"), _
                      aNameBar, True)
+  'Chama rotina para configurar barra.
+  Call BarConfig
+End Sub
+Private Sub BarConfig()
   'Configura a estrutura do novo Control.
   With aProgressBar
     .Height = VBA.IIf(aTBar = Progress, 12, 18)
     .Left = VBA.IIf(aTBar = Progress, 9, 12)
-    .Top = VBA.IIf(aTBar = Progress, 8, 12)
+    .Top = 12
     .Width = VBA.IIf(aTBar = Progress, 0, aMaxWidthBar)
     .BackColor = VBA.IIf(aTBar = Progress, vbBlue, &H8000000F)
     If aTBar <> Progress Then .Locked = True
   End With
 End Sub
 '=========================================================================================
-
