@@ -14,6 +14,9 @@ Attribute VB_Exposed = False
 ' Contato/GitHub  : https://github.com/MikelSFraga/CustomProgressBar
 ' Descrição       : Criação de um Progress Bar Personalizada, através da criação de um Userform
 '                   dinamicamente exobindo a evolução de um processo envocado simultaneamente.
+'
+' Pré-requisito
+' Referências     : Microsoft Visual Basic for Applications Extensibility 5.3
 '-----------------------------------------------------------------------------------------
 Option Explicit
 '=========================================================================================
@@ -35,6 +38,7 @@ End Enum
   Private Const aNameBar                As String = "ctlCPBar"
   Private Const aMaxWidthBar            As Integer = 300
   Private Const aClass                  As String = "ApiFunction"
+  Private Const aOpEx                   As String = "Option Explicit"
 '=========================================================================================
 
 '=========================================================================================
@@ -159,8 +163,9 @@ Private Sub CreateNewForm()
   Set aControl = ThisWorkbook.VBProject.VBComponents.Add(3)
   'Configura a estrutura do novo Userform.
   With aControl
+    '.Properties("Name") = "frmPBar"
     .Properties("Tag") = aTagForm
-    .Properties("Caption") = ""
+    .Properties("Caption") = "Custom Progress Bar"
     .Properties("Width") = 344
     .Properties("Height") = VBA.IIf(aTBar = Progress, 75, 85)
   End With
