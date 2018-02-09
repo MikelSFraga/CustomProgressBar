@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '-----------------------------------------------------------------------------------------
 ' Classe          : cProgressBar Class
-' Data            :
+' Data            : 02/08/2017
 ' Developer       : Mikel S Fraga
 ' Contato/GitHub  : https://github.com/MikelSFraga/CustomProgressBar
 ' Descrição       : Criação de um Progress Bar Personalizada, através da criação de um Userform
@@ -88,17 +88,16 @@ End Property
 '=========================================================================================
 ' DECLARAÇÃO DOS MÉTODOS PUBLICOS DA CLASSE.
 Public Sub Initialize()
-  'This is to stop screen flashing while creating form
-  Application.VBE.MainWindow.Visible = False
-  'Cria novo formulário.
-  Call CreateNewForm
-  'Cria caixa de grupo.
-  Call CreateNewFrame
-  'Cria barra com rótulo.
-  Call CreateNewBar
-  'Abre o formulário que foi criado.,
-  Set aForm = UserForms(UserForms.Count - 1)
-  aForm.Show vbModeless: aVisible = True
+  'Chama rotina para criação dos controles do ProgressBar.
+  Call CreateCpb(True)
+End Sub
+Public Sub Alter(Optional ByVal pBarType As BarType = Progress, _
+                 Optional ByVal pCountType As CountType = Percentage, _
+                 Optional ByVal pVisibleForm As Boolean = False)
+  'Altera tipo de ProgressBar a ser utilizado.
+  aTBar = pBarType: aTCount = pCountType
+  'Realiza alteração das informações.
+  Call CreateCpb(pVisibleForm)
 End Sub
 Public Sub Update(ByVal pRecordNow As Long, Optional ByVal pRecordMax As Long, _
                   Optional ByVal pTextBar As String = "Carregando Registros...")
@@ -158,25 +157,50 @@ End Sub
 
 '=========================================================================================
 ' DECLARAÇÃO DOS EVENTOS DA CLASSE.
+Private Sub CreateCpb(Optional ByVal pVisibleForm As Boolean = False)
+  'This is to stop screen flashing while creating form
+  Application.VBE.MainWindow.Visible = False
+  'Cria novo formulário.
+  Call CreateNewForm
+  'Cria caixa de grupo.
+  Call CreateNewFrame
+  'Cria barra com rótulo.
+  Call CreateNewBar
+  'Abre o formulário que foi criado.,
+  Set aForm = UserForms(UserForms.Count - 1)
+  If pVisibleForm Then aForm.Show vbModeless: aVisible = True
+End Sub
 Private Sub CreateNewForm()
   'Atribui o novo VbComponent ao atributo aForm.
-  Set aControl = ThisWorkbook.VBProject.VBComponents.Add(3)
-  'Configura a estrutura do novo Userform.
-  With aControl
-    '.Properties("Name") = "frmPBar"
-    .Properties("Tag") = aTagForm
-    .Properties("Caption") = "Custom Progress Bar"
-    .Properties("Width") = 344
-    .Properties("Height") = VBA.IIf(aTBar = Progress, 75, 85)
-  End With
-  'Adiciona o Userform criado a lista de Userforms.
-  VBA.UserForms.Add aControl.Name
-  'Atribui o novo Userform ao atributo aForm.
-  Set aForm = VBA.UserForms(UserForms.Count - 1)
+  If aControl Is Nothing Then
+    Set aControl = ThisWorkbook.VBProject.VBComponents.Add(3)
+    'Adiciona o Userform criado a lista de Userforms.
+    VBA.UserForms.Add aControl.Name
+    'Atribui o novo Userform ao atributo aForm.
+    Set aForm = VBA.UserForms(UserForms.Count - 1)
+  End If
+  'Chama rotina para configuração do Userform.
+  Call FormatNewForm
 End Sub
+Private Sub FormatNewForm()
+  'Configura a estrutura do novo Userform.
+  With aForm
+    '.Properties("Name") = "frmPBar"
+    .Tag = aTagForm
+    .Caption = "Custom Progress Bar"
+    .Width = 344
+    .Height = VBA.IIf(aTBar = Progress, 75, 85)
+  End With
+End Sub
+
 Private Sub CreateNewFrame()
   'Atribui o novo Frame ao atributo aFrame.
-  Set aFrame = aForm.Controls.Add("Forms.frame.1", aNameFrame, True)
+  If aFrame Is Nothing Then _
+    Set aFrame = aForm.Controls.Add("Forms.frame.1", aNameFrame, True)
+  'Chama rotina para configuração do Frame.
+  Call FormatNewFrame
+End Sub
+Private Sub FormatNewFrame()
   'Configura a estrutra do novo Frame.
   With aFrame
     .Height = VBA.IIf(aTBar = Progress, 34, 43)
@@ -188,10 +212,21 @@ Private Sub CreateNewFrame()
   End With
 End Sub
 Private Sub CreateNewBar()
+  'Verifica se o objeto aProgressBar esta instanciado.
+  If Not aProgressBar Is Nothing Then
+    'Remove o controle atual do Userform.
+    aFrame.Controls.Remove aProgressBar.Name
+    'Limpa objeto para nova instancia.
+    Set aProgressBar = Nothing
+  End If
   'Atribui a no Control ao atributo aProgressBar.
   Set aProgressBar = aFrame.Controls.Add(VBA.IIf( _
                      aTBar = Progress, "Forms.Label.1", "Forms.TextBox.1"), _
                      aNameBar, True)
+  'Chama rotina para configuração da Barra.
+  Call FormatNewBar
+End Sub
+Private Sub FormatNewBar()
   'Configura a estrutura do novo Control.
   With aProgressBar
     .Height = VBA.IIf(aTBar = Progress, 12, 18)
@@ -203,4 +238,3 @@ Private Sub CreateNewBar()
   End With
 End Sub
 '=========================================================================================
-
