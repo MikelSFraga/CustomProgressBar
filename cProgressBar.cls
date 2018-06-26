@@ -74,10 +74,15 @@ Public Property Let RecordMax(pRecordMax As Long): aRecordMax = pRecordMax: End 
 'Propriedade para definir o título do Userform do ProgressBar.
 Public Property Get TitleToForm() As String: TitleToForm = aTitle: End Property
 Public Property Let TitleToForm(pTitle As String): aTitle = pTitle
-aForm.Caption = aTitle: End Property
+  'Verifica se o Userform foi inicializado.
+  If Not aForm Is Nothing Then aForm.Caption = aTitle
+End Property
 'Propriedade para definir o se o Userform do ProgressBar esta exibido ou não.
 Public Property Get VisibleForm() As Boolean: VisibleForm = aVisible: End Property
-Public Property Let VisibleForm(pVisible As Boolean): aVisible = pVisible
+Public Property Let VisibleForm(pVisible As Boolean)
+  'Verifica se o Userform foi inicializado.
+  If Not aForm Is Nothing Then aVisible = pVisible Else Exit Property
+  'Define a propriedade
   Select Case pVisible
     Case False: aForm.Hide
     Case True: aForm.Show vbModeless
@@ -87,9 +92,9 @@ End Property
 
 '=========================================================================================
 ' DECLARAÇÃO DOS MÉTODOS PUBLICOS DA CLASSE.
-Public Sub Initialize()
+Public Sub Initialize(Optional ByVal pVisibleForm As Boolean = True)
   'Chama rotina para criação dos controles do ProgressBar.
-  Call CreateCpb(True)
+  Call CreateCpb(pVisibleForm)
 End Sub
 Public Sub Alter(Optional ByVal pBarType As BarType = Progress, _
                  Optional ByVal pCountType As CountType = Percentage, _
@@ -187,7 +192,7 @@ Private Sub FormatNewForm()
   With aForm
     '.Properties("Name") = "frmPBar"
     .Tag = aTagForm
-    .Caption = "Custom Progress Bar"
+    .Caption = VBA.IIf(aTitle = "", "Custom Progress Bar", aTitle)
     .Width = 344
     .Height = VBA.IIf(aTBar = Progress, 75, 85)
   End With
