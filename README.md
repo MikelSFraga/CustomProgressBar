@@ -1,10 +1,73 @@
-# Custom ProgressBar V1.1.0
+# Custom ProgressBar V1.2.0
+
+Continuando o processo de melhorias para a classe, estamos publicando uma nova atualização do __Custom Progress Bar__ para a versão ___V 1.2.0___. Nesta nova versão, foi adicionado um novo método e realizada algumas melhorias internas da biblioteca.
+
+***
+
+#### Métodos e Propriedades
+
+Aqui iremos ver em detalhes, os métodos e propriedades que foram criados para melhoria desta classe, afim de proporcionar maiores opções de uso para os desenvolvedores.
+***
+#### Propriedades
+
+##### FormStart
+
+Essa propriedade nos permite instanciar o ___Objeto da Classe___, definindo o __Formulário (Userform)__ que será manipulado/personalizado. Definindo essa propriedade, todas as demais já estarão direcionando seus resultados para o __Formulário (Userform)__ definido.
+
+__Exemplo:__
+```vb
+Option Explicit
+
+Private Sub Userform_Info()
+  ' Declaração do objeto da classe.
+  Dim oProgressBar As New cProgressBar
+  ' Define o Userform para sub-objeto da classe.
+  Set oProgressBar.FormStart = UserForm1
+End Sub
+```
+
+***
+#### Métodos
+
+##### About
+
+Este método exibe detalhes informativos do desenvolvimento da classse, deste Data de Criação e Modificação, até o nome de membros da Comunidade Brasileira de Excel/VBA, que colaboraram de forma direta ou indireta, com o projeto __Custom Progress Bar__.
+
+```vb
+Option Explicit
+
+Private Sub InformativoClasse()
+  ' Declaração do objeto da classe.
+  Dim oProgressBar As New cProgressBar
+  ' Instancia o objeto para uso no ambiente.
+  Set oProgressBar = New cProgressBar
+  ' Chama rotina About, que exibe um caixa de texto informativa.
+  Call oProgressBar.About
+End Sub
+```
+<p align="center">
+  <img src="https://github.com/MikelSFraga/CustomProgressBar/blob/master/img/About_Info.png">
+</p>
+
+***
+#### Melhorias Internas
+
+Apesar de não ser visível ao desenvolvedor, foram adicionadas melhorias internas, que vão auxiliá-lo na gestão dos seus projetos e atualização desta classe.
+
+##### Exclusão de Lixos
+No processo de execução da classe, caso ocorra algum erro que interrompa o processo, acaba sendo deixado no projeto, lixos que são criados em tempo de execução. Em específico para esta classe, esses lixos são Userform´s criados para exibição do __Custom Progress Bar__. Visando melhorar essa estrutura, foi construida uma rotina interna que faz uma varredura e verifica os lixos deixados por processos mal sucedidos anteriormente, excluindo-os permanentemente.
+
+##### Verificação de Novas Versões
+Utilizando os dados gerados pelo __Método About__, foi construido um procedimento de verificação/atualização da classe, que informa ao desenvolvedor, caso as configurações estejam corretas, sobre a disponibilidade de uma nova versão da biblioteca. Caso seja do interesse do mesmo, a própria rotina já redireciona-o ao repositório do ___GitHub___, para leitura da documentação e download da nova versão, caso seja de interesse do desenvolvedor.
+
+***
+## Custom ProgressBar V1.1.0
 
 Após buscas por melhorias, estamos atualizando o __Custom Progress Bar__ para a versão ___V 1.1.0___. Nesta nova versão, foram adicionados (e alterados) alguns métodos e propriedades, que podem melhorar o desempenho da biblioteca.
 
 ***
 
-#### Novos Métodos e Propriedades
+#### Métodos e Propriedades
 
 Aqui iremos ver em detalhes, os métodos e propriedades que foram criados para melhoria desta classe, afim de proporcionar maiores opções de uso para os desenvolvedores.
 ***
