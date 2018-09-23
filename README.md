@@ -1,4 +1,10 @@
-# Custom ProgressBar V1.2.0
+# Custom ProgressBar V1.2.1
+
+Durante alguns testes da ferramenta, foram detectados alguns erros de lógicas na execução dos novos controles. Esses erros foram corrigidos nessa versão e, por esse motivo, esta sendo lançada uma nova versão com esta correção.
+
+
+***
+## Custom ProgressBar V1.2.0
 
 Continuando o processo de melhorias para a classe, estamos publicando uma nova atualização do __Custom Progress Bar__ para a versão ___V 1.2.0___. Nesta nova versão, foi adicionado um novo método e realizada algumas melhorias internas da biblioteca.
 

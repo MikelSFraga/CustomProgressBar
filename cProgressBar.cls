@@ -57,7 +57,7 @@ End Enum
   #If DevelopMode Then
     Private aControl                    As VBIDE.VBComponent
     Private aFrame                      As MSForms.Frame
-    Private aProgressBar                As MSForms.Control
+    Private aProgressBar                As MSForms.control
     Private aXmlHttp                    As MSXML2.XMLHTTP60
     Private aHtmlDoc                    As MSHTML.HTMLDocument
   #Else
@@ -160,11 +160,8 @@ Public Sub Initialize(Optional ByVal pVisibleForm As Boolean = True)
 End Sub
 Public Sub Update(ByVal pRecordNow As Long, Optional ByVal pRecordMax As Long, _
                   Optional ByVal pTextBar As String = "Carregando Registros...")
-  'Verifica se o form continua visível.
-  'If aForm.Visible = False Then Me.VisibleForm = True
-  'Debug.Print aForm.Visible
   'Confronto entre atributo e parâmetro RecordMax.
-  If pRecordMax > aRecordMax Then aRecordMax = pRecordMax
+  If pRecordMax > 0 Then aRecordMax = pRecordMax
   'Define o percentual de pRecordNow sobre aRecordMax.
   aPercentil = pRecordNow / aRecordMax
   'Define valor retorno contador do ProgressBar.
@@ -299,23 +296,26 @@ Private Sub CreateCPBar(Optional ByVal pVisibleForm As Boolean = False)
   If pVisibleForm Then aFormPB.Show vbModeless: aVisible = True
 End Sub
 Private Sub CreateNewForm()
-  'Atribui o novo VbComponent ao atributo aForm.
-  Set aControl = ThisWorkbook.VBProject.VBComponents.Add(3)
+  'Verifica se já existe um userform aberto.
+  If aFormPB Is Nothing Then
+    'Atribui o novo VbComponent ao atributo aForm.
+    Set aControl = ThisWorkbook.VBProject.VBComponents.Add(3)
+    'Adiciona o Userform criado a lista de Userforms.
+    VBA.UserForms.Add aControl.Name
+    'Atribui o novo Userform ao atributo aForm.
+    Set aFormPB = VBA.UserForms(UserForms.Count - 1)
+  End If
   'Chama rotina para configuração do Userform.
   Call FormatNewForm
-  'Adiciona o Userform criado a lista de Userforms.
-  VBA.UserForms.Add aControl.Name
-  'Atribui o novo Userform ao atributo aForm.
-  Set aFormPB = VBA.UserForms(UserForms.Count - 1)
 End Sub
 Private Sub FormatNewForm()
   'Configura a estrutura do novo Userform.
-  With aControl
+  With aFormPB
     '.Properties("Name") = "frmPBar"
-    .Properties("Tag") = aTagForm
-    .Properties("Caption") = VBA.IIf(aTitle = "", "Custom Progress Bar", aTitle)
-    .Properties("Width") = 344
-    .Properties("Height") = VBA.IIf(aTBar = Progress, 75, 85)
+    .Tag = aTagForm
+    .Caption = VBA.IIf(aTitle = "", "Custom Progress Bar", aTitle)
+    .Width = 344
+    .Height = VBA.IIf(aTBar = Progress, 75, 85)
   End With
 End Sub
 
