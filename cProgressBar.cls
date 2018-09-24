@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '-----------------------------------------------------------------------------------------
 ' Classe          : cProgressBar Class
-' Version         : 1.2.0
+' Version         : 1.2.1
 ' Data            : 21/09/2018
 ' Developer       : Mikel S Fraga
 ' Contato/GitHub  : https://github.com/MikelSFraga/CustomProgressBar
@@ -220,9 +220,9 @@ Private Sub ClassAbout()
   'Define os valores que serão exibidos sobre a classe.
   With aASystem
     .ClassName = "cProgressBar"
-    .Version = "v1.2.0"
+    .Version = "v1.2.1"
     .Created = "19/06/2017"
-    .Modified = "21/09/2018"
+    .Modified = "24/09/2018"
     .Developer = "Mikel S Fraga"
     .GitHubPage = "https://github.com/MikelSFraga/CustomProgressBar"
     .Description = "Criação de uma Barra de Progresso Personalizada, através da construção " & _
